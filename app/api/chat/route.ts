@@ -3,8 +3,31 @@ import { retrieve } from '@/lib/rag';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// --- Basit bellek-içi IP rate limit ---
+const WINDOW_MS = 60_000; // 1 dakikalık pencere
+const MAX_REQUESTS = 10;  // pencere başına IP başına istek
+const hits = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
+  timestamps.push(now);
+  hits.set(ip, timestamps);
+  return timestamps.length > MAX_REQUESTS;
+}
+
 export async function POST(req: Request) {
   try {
+    const ip =
+      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
+
+    if (isRateLimited(ip)) {
+      return Response.json(
+        { error: 'Too many requests. Please slow down.' },
+        { status: 429 }
+      );
+    }
+
     const { messages } = await req.json();
 
     const lastUser = [...messages].reverse().find((m) => m.role === 'user');
@@ -30,6 +53,7 @@ ${context}`;
         ...messages,
       ],
       temperature: 0.3,
+      max_tokens: 500,
       stream: true,
     });
 
