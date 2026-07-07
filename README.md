@@ -51,6 +51,8 @@ Open http://localhost:3000.
 - `app/api/chat/route.ts` — retrieval + streaming LLM response
 - `app/page.tsx` — chat UI
 
+  ## ScreenShots
+
 <img width="662" height="920" alt="screenShot1" src="https://github.com/user-attachments/assets/7bd94e8e-bf38-4fcc-8607-eded1181dd5c" />
 
 <img width="568" height="941" alt="screenShot2" src="https://github.com/user-attachments/assets/22eee840-87c4-4877-97ed-c83bfb3e64aa" />
