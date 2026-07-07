@@ -8,7 +8,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 function chunkBySection(text: string): string[] {
   return text
-    .split(/\n(?=## )/)   // her "## " başlığından böl
+    .split(/\n(?=## )/)
     .map((s) => s.trim())
     .filter(Boolean);
 }

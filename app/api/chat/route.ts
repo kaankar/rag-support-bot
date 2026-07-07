@@ -3,9 +3,8 @@ import { retrieve } from '@/lib/rag';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// --- Basit bellek-içi IP rate limit ---
-const WINDOW_MS = 60_000; // 1 dakikalık pencere
-const MAX_REQUESTS = 10;  // pencere başına IP başına istek
+const WINDOW_MS = 60_000;
+const MAX_REQUESTS = 10;
 const hits = new Map<string, number[]>();
 
 function isRateLimited(ip: string): boolean {
